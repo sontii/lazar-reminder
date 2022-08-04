@@ -21,8 +21,10 @@ and append the log file.
 
 #### **Requirements:**
 
-pandas==1.4.3
-openpyxl==3.0.10
+For install reuieqd packeges: pip3 install -r requirements.txt
+
+- pandas==1.4.3
+- openpyxl==3.0.10
 
 ---
 
