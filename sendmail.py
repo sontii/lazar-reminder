@@ -5,15 +5,15 @@ from datetime import datetime, timedelta
 import logging
 
 
-logging.basicConfig(filename="logfile.log", encoding='utf-8', level=logging.INFO)
+logging.basicConfig(filename="logfile.log", level=logging.INFO)
 
 
 def main():
    try:
-      df = pd.read_excel('//192.168.103.101/common/Doks/emlekezteto/emlekezteto.xlsx', skiprows=3)
-   except Exception:
-      errorMail()
-      logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem találom a filet ")
+      df = pd.read_excel('/share0/menteni/common/Doks/emlekezteto/emlekezteto.xlsx', skiprows=3, engine='openpyxl')
+   except Exception as err:
+      errorMail(err)
+      logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " " + err)
       exit(1)   
 
    dateCompare = datetime.today() + timedelta(days=40)
@@ -40,11 +40,11 @@ def sendMail(datum, okmany):
    except smtplib.SMTPException as e:
       logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet ", e)
 
-def errorMail():
+def errorMail(err):
    sender = 'ertesito@lazarteam.hu'
    receivers = ['f.ferenc@lazarteam.hu']
 
-   message = MIMEText('Nem található az excel: //192.168.103.101/common/Doks/emlekezteto/emlekezteto.xlsx')
+   message = MIMEText(err)
 
    message['From'] = 'ertesito@lazarteam.hu'
    message['To'] = 'f.ferenc@lazarteam.hu'
