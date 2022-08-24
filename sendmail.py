@@ -3,14 +3,19 @@ from email.mime.text import MIMEText
 import pandas as pd
 from datetime import datetime, timedelta
 import logging
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+
+xPath = os.getenv("XLSXPATH")
 
 logging.basicConfig(filename="logfile.log", level=logging.INFO)
 
 
 def main():
    try:
-      df = pd.read_excel('/share0/menteni/common/Doks/emlekezteto/emlekezteto.xlsx', skiprows=3, engine='openpyxl')
+      df = pd.read_excel(f'{xPath}', skiprows=3, engine='openpyxl')
    except Exception as err:
       errorMail(err)
       logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " " + err)
@@ -26,35 +31,35 @@ def main():
 
 def sendMail(datum, okmany):
    sender = 'ertesito@lazarteam.hu'
-   receivers = ['kassai.dora@lazarteam.hu, konyveles@lazarteam.hu']
+   recipients = ['kassai.dora@lazarteam.hu, konyveles@lazarteam.hu']
 
    message = MIMEText(f'Emlékeztető email lejáró okmányról.\n {datum} {okmany}')
 
    message['From'] = 'ertesito@lazarteam.hu'
-   message['To'] = 'kassai.dora@lazarteam.hu, konyveles@lazarteam.hu'
+   message['To'] = ", ".join(recipients)
    message['Subject'] = f'{okmany} Lejáró okmány {datum}'
 
    try:
       smtpObj = smtplib.SMTP('192.168.103.100')
-      smtpObj.sendmail(sender, receivers, message.as_string())
+      smtpObj.sendmail(sender, recipients, message.as_string())
    except smtplib.SMTPException as e:
-      logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet ", e)
+      logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + e)
 
 def errorMail(err):
    sender = 'ertesito@lazarteam.hu'
-   receivers = ['f.ferenc@lazarteam.hu']
+   recipients = ['f.ferenc@lazarteam.hu']
 
    message = MIMEText(err)
 
    message['From'] = 'ertesito@lazarteam.hu'
    message['To'] = 'f.ferenc@lazarteam.hu'
-   message['Subject'] = 'Nem található az excel'
+   message['Subject'] = 'Ertesito email hiba'
 
    try:
       smtpObj = smtplib.SMTP('192.168.103.100')
-      smtpObj.sendmail(sender, receivers, message.as_string())
-   except smtplib.SMTPException:
-      logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet ")
+      smtpObj.sendmail(sender, recipients, message.as_string())
+   except smtplib.SMTPException as e:
+      logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + e)
 
 
 
