@@ -18,7 +18,7 @@ def main():
       df = pd.read_excel(xPath, skiprows=3, engine='openpyxl')
    except Exception as err:
       errorMail()
-      logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " " + err)
+      logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Hiba a file megnyitásakor")
       exit(1)   
 
    dateCompare = datetime.today() + timedelta(days=40)
