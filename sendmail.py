@@ -15,9 +15,9 @@ logging.basicConfig(filename="logfile.log", level=logging.INFO)
 
 def main():
    try:
-      df = pd.read_excel(f'{xPath}', skiprows=3, engine='openpyxl')
+      df = pd.read_excel(xPath, skiprows=3, engine='openpyxl')
    except Exception as err:
-      errorMail(err)
+      errorMail()
       logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " " + err)
       exit(1)   
 
@@ -31,7 +31,7 @@ def main():
 
 def sendMail(datum, okmany):
    sender = 'ertesito@lazarteam.hu'
-   recipients = ['kassai.dora@lazarteam.hu, konyveles@lazarteam.hu']
+   recipients = ['kassai.dora@lazarteam.hu', 'konyveles@lazarteam.hu']
 
    message = MIMEText(f'Emlékeztető email lejáró okmányról.\n {datum} {okmany}')
 
@@ -45,11 +45,11 @@ def sendMail(datum, okmany):
    except smtplib.SMTPException as e:
       logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + e)
 
-def errorMail(err):
+def errorMail():
    sender = 'ertesito@lazarteam.hu'
    recipients = ['f.ferenc@lazarteam.hu']
 
-   message = MIMEText(err)
+   message = MIMEText("Hiba - ellenőrizd a logot")
 
    message['From'] = 'ertesito@lazarteam.hu'
    message['To'] = 'f.ferenc@lazarteam.hu'
