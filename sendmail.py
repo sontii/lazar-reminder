@@ -10,7 +10,7 @@ load_dotenv()
 
 xPath = os.getenv("XLSXPATH")
 
-logging.basicConfig(filename="logfile.log", level=logging.INFO)
+logging.basicConfig(filename="logs/logfile.log", level=logging.INFO)
 
 
 def main():
@@ -18,7 +18,7 @@ def main():
       df = pd.read_excel(xPath, skiprows=3, engine='openpyxl')
    except Exception as err:
       errorMail()
-      logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Hiba a file megnyitásakor")
+      logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Hiba a file megnyitásakor: " + f"{err}")
       exit(1)   
 
    dateCompare = datetime.today() + timedelta(days=40)
@@ -43,7 +43,7 @@ def sendMail(datum, okmany):
       smtpObj = smtplib.SMTP('192.168.103.100')
       smtpObj.sendmail(sender, recipients, message.as_string())
    except smtplib.SMTPException as e:
-      logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + e)
+      logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + f"{e}")
 
 def errorMail():
    sender = 'ertesito@lazarteam.hu'
@@ -59,7 +59,7 @@ def errorMail():
       smtpObj = smtplib.SMTP('192.168.103.100')
       smtpObj.sendmail(sender, recipients, message.as_string())
    except smtplib.SMTPException as e:
-      logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + e)
+      logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + f"{e}")
 
 
 
