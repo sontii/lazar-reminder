@@ -25,6 +25,7 @@ For install reuieqd packeges: pip3 install -r requirements.txt
 
 - pandas==1.4.3
 - openpyxl==3.0.10
+- python-dotenv==0.20.0
 
 ---
 
@@ -33,11 +34,7 @@ For install reuieqd packeges: pip3 install -r requirements.txt
 - sendemail.py
 - Readme.md - you are here
 - reqirement.txt
-
----
-
-### **Excel File:**
-
-- //192.168.103.101/common/Doks/emlekezteto/emlekezteto.xlsx
+- .env
+- logs
 
 ---
