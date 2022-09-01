@@ -1,5 +1,6 @@
 import smtplib
 from email.mime.text import MIMEText
+from typing import List
 import pandas as pd
 from datetime import datetime, timedelta
 import logging
@@ -8,7 +9,21 @@ import os
 
 load_dotenv()
 
+# list for recipients
+emailRecipients = []
+errorRecipient = []
+
+# enviroment variables setup
 xPath = os.getenv("XLSXPATH")
+envRecipients = os.getenv("EMAILRECIPIENTS")
+errorRecipient.append(os.getenv("ERRORRECIPIENT"))
+errorRecipientSTR = os.getenv("ERRORRECIPIENT")
+envSender = os.getenv("SENDER")
+envSMTP = os.getenv("SMTP")
+
+# env list
+for email in envRecipients.split(","):
+   emailRecipients.append(email)
 
 logging.basicConfig(filename="logs/logfile.log", level=logging.INFO)
 
@@ -17,7 +32,7 @@ def main():
    try:
       df = pd.read_excel(xPath, skiprows=3, engine='openpyxl')
    except Exception as err:
-      errorMail()
+      errorMail(err)
       logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Hiba a file megnyitásakor: " + f"{err}")
       exit(1)   
 
@@ -30,33 +45,33 @@ def main():
          sendMail(datum, okmany)
 
 def sendMail(datum, okmany):
-   sender = 'ertesito@lazarteam.hu'
-   recipients = ['kassai.dora@lazarteam.hu', 'konyveles@lazarteam.hu']
+   sender = envSender
+   recipients = emailRecipients
 
    message = MIMEText(f'Emlékeztető email lejáró okmányról.\n {datum} {okmany}')
 
-   message['From'] = 'ertesito@lazarteam.hu'
+   message['From'] = envSender
    message['To'] = ", ".join(recipients)
    message['Subject'] = f'{okmany} Lejáró okmány {datum}'
 
    try:
-      smtpObj = smtplib.SMTP('192.168.103.100')
+      smtpObj = smtplib.SMTP(envSMTP)
       smtpObj.sendmail(sender, recipients, message.as_string())
    except smtplib.SMTPException as e:
       logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + f"{e}")
 
-def errorMail():
-   sender = 'ertesito@lazarteam.hu'
-   recipients = ['f.ferenc@lazarteam.hu']
+def errorMail(err):
+   sender = envSender
+   recipients = errorRecipient
 
-   message = MIMEText("Hiba - ellenőrizd a logot")
+   message = MIMEText( f"Hiba - ellenőrizd a logot: \n {err}")
 
-   message['From'] = 'ertesito@lazarteam.hu'
-   message['To'] = 'f.ferenc@lazarteam.hu'
+   message['From'] = envSender
+   message['To'] = errorRecipientSTR
    message['Subject'] = 'Ertesito email hiba'
 
    try:
-      smtpObj = smtplib.SMTP('192.168.103.100')
+      smtpObj = smtplib.SMTP(envSMTP)
       smtpObj.sendmail(sender, recipients, message.as_string())
    except smtplib.SMTPException as e:
       logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + f"{e}")
