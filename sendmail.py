@@ -1,6 +1,5 @@
 import smtplib
 from email.mime.text import MIMEText
-from typing import List
 import pandas as pd
 from datetime import datetime, timedelta
 import logging
