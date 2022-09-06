@@ -14,6 +14,7 @@ errorRecipient = []
 
 # enviroment variables setup
 xPath = os.getenv("XLSXPATH")
+logPath = os.getenv("LOGFILEPATH")
 envRecipients = os.getenv("EMAILRECIPIENTS")
 errorRecipient.append(os.getenv("ERRORRECIPIENT"))
 errorRecipientSTR = os.getenv("ERRORRECIPIENT")
@@ -24,7 +25,7 @@ envSMTP = os.getenv("SMTP")
 for email in envRecipients.split(","):
    emailRecipients.append(email)
 
-logging.basicConfig(filename="logs/logfile.log", level=logging.INFO)
+logging.basicConfig(filename=logPath, level=logging.INFO)
 
 
 def main():
@@ -33,7 +34,7 @@ def main():
    except Exception as err:
       errorMail(err)
       logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Hiba a file megnyitásakor: " + f"{err}")
-      exit(1)   
+      exit(1)
 
    dateCompare = datetime.today() + timedelta(days=40)
 
@@ -76,8 +77,6 @@ def errorMail(err):
       smtpObj.sendmail(sender, recipients, message.as_string())
    except smtplib.SMTPException as e:
       logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + f"{e}")
-
-
 
 if __name__ == "__main__":
     main()
