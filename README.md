@@ -32,9 +32,9 @@ For install reuieqd packeges: pip3 install -r requirements.txt
 ### **Files and folders:**
 
 - sendemail.py
-- Readme.md - you are here
+- README.md <- you are here
 - reqirement.txt
 - .env
-- logs
+- logs/log
 
 ---
