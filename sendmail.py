@@ -36,12 +36,14 @@ def main():
       exit(1)   
 
    dateCompare = datetime.today() + timedelta(days=40)
- 
+
    for index, row in df.iterrows():
       if row['Dátum'] < dateCompare:
          datum = row['Dátum'].strftime("%Y.%m.%d")
          okmany = row['Okmány']
          sendMail(datum, okmany)
+
+   logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " sikeres küldés")
 
 def sendMail(datum, okmany):
    sender = envSender
