@@ -30,7 +30,8 @@ logging.basicConfig(filename=logPath, level=logging.INFO)
 
 def main():
    try:
-      df = pd.read_excel(xPath, skiprows=3, engine='openpyxl')
+      with open(xPath, "rb") as f:
+        df = pd.read_excel(f, skiprows=3, engine='openpyxl')
    except Exception as err:
       errorMail(err)
       logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Hiba a file megnyitásakor: " + f"{err}")
