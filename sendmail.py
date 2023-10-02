@@ -19,7 +19,7 @@ envRecipients = os.getenv("EMAILRECIPIENTS")
 errorRecipient.append(os.getenv("ERRORRECIPIENT"))
 errorRecipientSTR = os.getenv("ERRORRECIPIENT")
 envSender = os.getenv("SENDER")
-envSMTP = os.getenv("SMTP")
+envSMTPPASS = os.getenv("SMTP")
 
 # env list
 for email in envRecipients.split(","):
@@ -48,36 +48,35 @@ def main():
    logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " sikeres küldés")
 
 def sendMail(datum, okmany):
-   sender = envSender
+   subject = f'{okmany} Lejáró okmány {datum}'
+   body = MIMEText(f'Emlékeztető email lejáró okmányról.\n {datum} {okmany}')
    recipients = emailRecipients
 
-   message = MIMEText(f'Emlékeztető email lejáró okmányról.\n {datum} {okmany}')
-
-   message['From'] = envSender
-   message['To'] = ", ".join(recipients)
-   message['Subject'] = f'{okmany} Lejáró okmány {datum}'
-
    try:
-      smtpObj = smtplib.SMTP(envSMTP)
-      smtpObj.sendmail(sender, recipients, message.as_string())
+      send_mail(subject, body, recipients)
    except smtplib.SMTPException as e:
       logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + f"{e}")
 
 def errorMail(err):
-   sender = envSender
-   recipients = errorRecipient
-
-   message = MIMEText( f"Hiba - ellenőrizd a logot: \n {err}")
-
-   message['From'] = envSender
-   message['To'] = errorRecipientSTR
-   message['Subject'] = 'Ertesito email hiba'
+   subject = 'Ertesito email hiba'
+   body = MIMEText( f"Hiba - ellenőrizd a logot: \n {err}")
+   recipients = errorRecipientSTR
 
    try:
-      smtpObj = smtplib.SMTP(envSMTP)
-      smtpObj.sendmail(sender, recipients, message.as_string())
+      send_mail(subject, body, recipients)
    except smtplib.SMTPException as e:
       logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + f"{e}")
+
+
+def send_email(subject, body, recipients):
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = anvSender
+    msg['To'] = ', '.join(recipients)
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
+       smtp_server.login(envSenender, envSmtpPass)
+       smtp_server.sendmail(sender, recipients, msg.as_string())
+     print("Message sent!")
 
 if __name__ == "__main__":
     main()
