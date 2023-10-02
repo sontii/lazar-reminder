@@ -48,13 +48,15 @@ def main():
          try:
             send_email(subject, body, recipients)
          except smtplib.SMTPException as e:
+            errorMail(e)
             logging.info(" " + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " Nem sikerült elküldeni a levelet hiba: " + f"{e}")
+            exit(1)
 
    logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " sikeres küldés")
 
 def errorMail(err):
    subject = 'Ertesito email hiba'
-   body = MIMEText(f"Hiba - ellenőrizd a logot: \n {err}")
+   body = f"Hiba - ellenőrizd a logot: \n {err}"
    recipients = errorRecipientSTR
 
    try:
