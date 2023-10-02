@@ -19,7 +19,7 @@ envRecipients = os.getenv("EMAILRECIPIENTS")
 errorRecipient.append(os.getenv("ERRORRECIPIENT"))
 errorRecipientSTR = os.getenv("ERRORRECIPIENT")
 envSender = os.getenv("SENDER")
-envSmtpPass = os.getenv("SMTP")
+envSmtpPass = os.getenv("SMTP_PASS")
 
 # env list
 for email in envRecipients.split(","):
@@ -44,7 +44,7 @@ def main():
          okmany = row['Okmány']
          subject = f'{okmany} Lejáró okmány {datum}'
          body = f'Emlékeztető email lejáró okmányról.\n {datum} {okmany}'
-         recipients = envRecipients
+         recipients = emailRecipients
          try:
             send_email(subject, body, recipients)
          except smtplib.SMTPException as e:
@@ -68,10 +68,12 @@ def send_email(subject, body, recipients):
     msg['Subject'] = subject
     msg['From'] = envSender
     msg['To'] = ', '.join(recipients)
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
-       smtp_server.login(envSender, envSmtpPass)
-       smtp_server.sendmail(sender, recipients, msg.as_string())
-    print("Message sent!")
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+       server.login('f.ferenc@lazarteam.hu', envSmtpPass)
+       server.sendmail(envSender, recipients, msg.as_string())
+    print("Üzenet elküldve!")
+
 
 if __name__ == "__main__":
     main()
