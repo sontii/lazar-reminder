@@ -21,11 +21,10 @@ and append the log file.
 
 #### **Requirements:**
 
-For install reuieqd packeges: pip3 install -r requirements.txt
-
-- pandas==1.4.3
-- openpyxl==3.0.10
-- python-dotenv==0.20.0
+examine Dockerfile
+useing 3.9-alpine 
+- docker build -t reminder-email-script:latest .
+- run with start-docker.sh
 
 ---
 
@@ -38,3 +37,4 @@ For install reuieqd packeges: pip3 install -r requirements.txt
 - logs/log
 
 ---
+

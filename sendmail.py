@@ -23,7 +23,7 @@ envSmtpPass = os.getenv("SMTP_PASS")
 
 # env list
 for email in envRecipients.split(","):
-   emailRecipients.append(email)
+   emailRecipients.append(email.strip())
 
 logging.basicConfig(filename=logPath, level=logging.INFO)
 
@@ -74,7 +74,7 @@ def send_email(subject, body, recipients):
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
        server.login('f.ferenc@lazarteam.hu', envSmtpPass)
        server.sendmail(envSender, recipients, msg.as_string())
-    print("Üzenet elküldve!")
+    logging.info(" "  + datetime.now().strftime('%Y.%m.%d %H:%M:%S') + " sikeres hiba küldés")
 
 
 if __name__ == "__main__":
