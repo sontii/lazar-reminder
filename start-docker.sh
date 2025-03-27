@@ -10,9 +10,12 @@ PROJECT_DIR="/srv/dev-disk-by-uuid-8258f36d-2a42-4932-9e7a-54da8c8da37e/scripts/
 # Change to the project directory
 cd "$PROJECT_DIR"
 
+# Build the Docker image
+docker build -t reminder-email-script:latest .  > /dev/null /dev/null 2>&1
+
 # Run the Docker container
 docker run -i --rm --name sendmail.py \
     -v "$PROJECT_DIR":/usr/src/app \
     -v /srv/dev-disk-by-uuid-83754a0e-1568-45ba-b5e1-a2ae0229ae80/common/Doks/emlekezteto/:/usr/src/app/xls/ \
     -v /srv/dev-disk-by-uuid-8258f36d-2a42-4932-9e7a-54da8c8da37e/scripts/reminder-email-python/logs/:/usr/src/app/logs/ \
-    -w /usr/src/app reminder-email-script:latest
+    -w /usr/src/app reminder-email-script:latest > /dev/null
