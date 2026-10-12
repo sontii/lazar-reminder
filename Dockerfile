@@ -13,5 +13,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the current directory contents into the container at /usr/src/app
 COPY . .
 
-# Run data_check.py when the container launches
+# Run sendmail.py when the container launches
 CMD ["python", "sendmail.py"]
